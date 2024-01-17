@@ -1,0 +1,10 @@
+httpx
+fastapi
+uvicorn 
+jinja2
+python-multipart
+pydantic
+sqlalchemy
+python-dotenv
+python-jose
+bcrypt==4.0.1
