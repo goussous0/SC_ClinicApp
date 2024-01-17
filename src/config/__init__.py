@@ -7,9 +7,8 @@ from api import api
 from db import get_db
 from auth import pass_hash
 from models.user import User
-from models.registrar import Registrar
 from models.record import Record
-from schema import UserType
+from schema import UserType, Gender
 from auth import TokenAuth
 from db import engine
 
@@ -21,16 +20,15 @@ class App(FastAPI):
         
 
         User.metadata.create_all(bind=engine)
-        Registrar.metadata.create_all(bind=engine)
         Record.metadata.create_all(bind=engine)
 
         # add dummy data 
         db = next(get_db())
         try:
-            admin = Registrar(username="admin", passhash=pass_hash("123")) 
+            admin = User(username="admin", passhash=pass_hash("123"), user_type=UserType.REGISTRAR) 
 
-            doctor = User(username="anna", name="Anna", gender="female", phone="+940234112", passhash=pass_hash("123"), user_type=UserType.DOCTOR)
-            patient = User(username="sara", name="Sara", gender="female", phone="+12342342", passhash=pass_hash("123"), user_type=UserType.PATIENT)
+            doctor = User(username="anna", name="Anna", gender=Gender.FEMALE, phone="+940234112", passhash=pass_hash("123"), user_type=UserType.DOCTOR)
+            patient = User(username="sara", name="Sara", gender=Gender.FEMALE, phone="+123423423", passhash=pass_hash("123"), user_type=UserType.PATIENT)
             db.add_all([admin, doctor, patient])
             db.commit()
         except IntegrityError:
@@ -45,8 +43,8 @@ class App(FastAPI):
         )
 
         @self.get("/")
-        async def home(request: Request, auth = Depends(TokenAuth())):
-            return self.templates.TemplateResponse("home.html", {"request": request, "user": auth.user})
+        async def home(request: Request):
+            return self.templates.TemplateResponse("home.html", {"request": request})
 
         @self.get("/login")
         async def login(request: Request):
@@ -61,8 +59,13 @@ class App(FastAPI):
             return self.templates.TemplateResponse("records.html", {"request": request, "user": auth.user})
 
         @self.get("/patients")
-        async def patients(request: Request, auth = Depends(TokenAuth())):
+        async def patients(request: Request, auth = Depends(TokenAuth()), db: Session = Depends(get_db)):
+            # all_patients = db.query(User).filter_by(user_type=UserType.PATIENT).all()
             return self.templates.TemplateResponse("patients.html", {"request": request, "user": auth.user})
+
+        @self.get("/doctors")
+        async def doctors(request: Request, auth = Depends(TokenAuth())):
+            return self.templates.TemplateResponse("doctors.html", {"request": request, "user": auth.user})
 
         @self.get("/profile")
         async def profile(request: Request, auth = Depends(TokenAuth())):

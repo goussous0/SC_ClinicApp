@@ -19,7 +19,6 @@ from auth import verify_hash, create_access_token
 
 api = APIRouter(prefix="/api")
 
-
 @api.post("/add_patient")
 async def add_patient(request: Request):
     return {"hello": "world"}

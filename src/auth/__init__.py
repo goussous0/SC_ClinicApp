@@ -1,9 +1,10 @@
 from typing import List
 from jose import jwt
+from fastapi.responses import RedirectResponse
 from fastapi import HTTPException, Depends, Request, status
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
-from jose.exceptions import ExpiredSignatureError
+from jose.exceptions import ExpiredSignatureError, JWTError, JWSSignatureError
 from random import choice, sample
 from string import digits, ascii_letters
 from schema import UserType
@@ -46,15 +47,16 @@ class TokenAuth:
             try:
 
                 data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            except ExpiredSignatureError:
-                raise HTTPException(status_code=401, headers={"Location": "/logout"})
+            
+            except (ExpiredSignatureError, JWTError, JWSSignatureError):
+                raise HTTPException(status_code=302, headers={"Location": "/logout"})
 
             try:
                 user = db.query(User).filter_by(username=data["username"]).first()
                 if user:
                     self.user = user
             except KeyError:
-                raise HTTPException(status_code=401, headers={"Location": "/logout"})
+                raise HTTPException(status_code=302, headers={"Location": "/logout"})
 
         return self
 

@@ -6,7 +6,11 @@ from enum import Enum
 class UserType(Enum):
     DOCTOR = "DOCTOR"
     PATIENT = "PATIENT"
+    REGISTRAR = "REGISTRAR"
 
+class Gender(Enum):
+    MALE = "MALE"
+    FEMALE = "FEMALE"
 
 @dataclass
 class LoginForm:
