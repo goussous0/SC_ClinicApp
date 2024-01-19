@@ -1,8 +1,100 @@
 
 {% extends 'header.html' %}
-{% block title %} Patients {% endblock %}
+{% block title %} Doctors {% endblock %}
 {% block content %}
 
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#patient_modal" >Add patient</button>
+
+<div class="modal fade" id="patient_modal" tabindex="-1" role="dialog" aria-labelledby="patient_modal_label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="patient_modalLabel">New patient</h5>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{{url_for('add_doctor')}}">
+          <!-- Patient name -->
+          <div class="form-group">
+            <label for="patient_name" class="col-form-label">Name:</label>
+            <input type="text" class="form-control" id="patient_name">
+          </div>
+
+          <!-- Patient username -->
+          <div class="form-group">
+            <label for="patient_username" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" id="patient_username">
+          </div>
+
+          <!-- Patient password -->
+          <div class="form-group">
+            <label for="patient_password" class="col-form-label">Password:</label>
+            <input type="password" class="form-control" id="patient_password">
+          </div>
+
+          <!-- Patient age-->
+          <div class="form-group">
+            <label for="patient_age" class="col-form-label">Age:</label>
+            <input type="number" min="18" max="150" class="form-control" id="patient_age">
+          </div>
+
+          <!-- Patient phone number -->
+          <div class="form-group">
+            <label for="patient_phone" class="col-form-label">Phone:</label>
+            <input type="text" class="form-control" id="patient_phone">
+          </div>
+
+          <!-- Patient gender -->
+          <div class="form-group">
+            <label for="patient_gender" class="col-form-label">Gender:</label>
+            <select name="gender" id="patient_gender">
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#patient_modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) 
+      var modal = $(this)
+    })
+</script>
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Age</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Phone</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+    {% for patient in patients %}
+        <tr>
+            <th scope="row">{{patient.id}}</th>
+            <td>{{patient.name}}</td>
+            <td>{{patient.age|default("",True)}}</td>
+            <td>{{patient.gender.value}}</td>
+            <td>{{patient.phone}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 
 
 {% endblock %}

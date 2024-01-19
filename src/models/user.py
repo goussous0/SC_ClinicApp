@@ -8,7 +8,7 @@ class User(Base):
     age = Column(Integer)
     name = Column(String)
     phone = Column(String)
-    gender = Column(Enum(Gender))
+    gender = Column(Enum(Gender), default=None)
     passhash = Column(String)
     username = Column(String, unique=True)
     user_type = Column(Enum(UserType))
