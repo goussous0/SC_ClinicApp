@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from db import Base
 
 class Record(Base):
@@ -8,3 +9,5 @@ class Record(Base):
     patient_id = Column(Integer, ForeignKey("users.id"))
     description = Column(String)
     treatment = Column(String)
+    
+

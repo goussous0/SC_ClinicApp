@@ -2,8 +2,9 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from sqlalchemy import or_, and_
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from api import api
 from db import get_db
 from auth import pass_hash
@@ -56,8 +57,14 @@ class App(FastAPI):
             return self.templates.TemplateResponse("patient.html", {"request": request, "user": auth.user})
 
         @self.get("/records")
-        async def records(request: Request, auth = Depends(TokenAuth())):
-            return self.templates.TemplateResponse("records.html", {"request": request, "user": auth.user})
+        async def records(request: Request, auth = Depends(TokenAuth()), db: Session = Depends(get_db)):
+            all_records = db.query(Record, User)
+            if auth.user.user_type == UserType.DOCTOR:
+                all_records = all_records.filter(Record.patient_id == User.id).all()
+            elif auth.user.user_type == UserType.PATIENT:
+                all_records = all_records.filter(Record.doctor_id == User.id).all()
+
+            return self.templates.TemplateResponse("records.html", {"request": request, "user": auth.user, "records": all_records})
 
         @self.get("/patients")
         async def patients(request: Request, auth = Depends(TokenAuth()), db: Session = Depends(get_db)):

@@ -16,6 +16,7 @@ from models.user import User
 
 from schema import (
     LoginForm,
+    NewRecord,
     UserType,
     NewUser,
     Gender,
@@ -68,8 +69,22 @@ async def add_doctor(request: Request, doctor: NewUser = Depends(), auth = Depen
 
 
 @api.post("/add_record")
-async def add_record(request: Request, auth = Depends(TokenAuth())):
-    return {"hello": "world"}
+async def add_record(request: Request, record: NewRecord = Depends(), db: Session = Depends(get_db), auth = Depends(TokenAuth())):
+    try:
+        new_record = Record(
+            doctor_id = record.doctor_id,
+            patient_id = record.patient_id,
+            description = record.description,
+            treatment = record.treatment,
+        )
+        db.add(new_record)
+        db.commit()
+        return {"success": f"record {new_record.id} added"}
+    except IntegrityError as e:
+        logger.error(e)
+        db.rollback()
+        return {"error": "Failed to add record"}
+
 
 @api.post("/login")
 async def post_login(request: Request, login_data: LoginForm = Depends(), db: Session = Depends(get_db)):

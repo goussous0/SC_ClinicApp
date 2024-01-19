@@ -1,0 +1,42 @@
+
+{% extends 'header.html' %}
+{% block title %} Patients {% endblock %}
+{% block content %}
+
+
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+
+        {% if user.user_type.value == 'DOCTOR' %}
+            <th scope="col">Patient </th>
+        {% else %}
+            <th scope="col">Doctor </th>
+        {% endif %}
+        <th scope="col">Description</th>
+        <th scope="col">Treatment</th>
+
+      </tr>
+    </thead>
+    <tbody>
+    
+    {% for row in records %}
+        <tr>
+            <th scope="row">{{row.Record.id}}</th>
+            {% if user.user_type.value == 'DOCTOR' %}
+                <td>{{row.User.name}}</td>
+            {% elif user.user_type.value == 'PATIENT' %}
+                <td>{{row.User.name}}</td>
+            {% endif %}
+            <td>{{row.Record.description}}</td>
+            <td>{{row.Record.treatment}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endblock %}

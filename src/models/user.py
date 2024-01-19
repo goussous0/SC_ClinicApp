@@ -1,4 +1,5 @@
 from sqlalchemy import Integer, Column, String, Enum
+from sqlalchemy.orm import relationship
 from db import Base
 from schema import UserType, Gender
 
@@ -12,3 +13,4 @@ class User(Base):
     passhash = Column(String)
     username = Column(String, unique=True)
     user_type = Column(Enum(UserType))
+
