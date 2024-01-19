@@ -16,6 +16,22 @@
 </title>
 </head>
 <body>
+    <script>
+        function formatPhoneNumber(number) {
+          // Remove non-numeric characters
+          var cleaned = ('' + number).replace(/\D/g, '');
+                
+          // Apply phone number format
+          var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+                
+          if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+          }
+      
+          // Return the original number if no match is found
+          return number;
+        }
+    </script>
     <div class="offcanvas offcanvas-start w-15" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
         <div class="offcanvas-header">
             <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">ClinicPro</h6>

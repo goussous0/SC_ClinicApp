@@ -1,10 +1,9 @@
 from schema import Gender
-from dataclasses import dataclass
 from fastapi import Form
-
+from dataclasses import dataclass
 
 @dataclass
-class NewPatient:
+class NewDoctor:
     name: str  = Form(...)
     age: int  = Form(...)
     gender: Gender = Form(...)

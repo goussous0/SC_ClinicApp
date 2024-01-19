@@ -16,3 +16,29 @@ class Gender(Enum):
 class LoginForm:
     username: str = Form(...)
     password: str = Form(...)
+
+
+@dataclass
+class NewUser:
+    name: str  = Form(...)
+    age: int  = Form(...)
+    gender: Gender = Form(...)
+    phone: str = Form(...)
+    username: str = Form(...)
+    password: str = Form(...)
+
+    # def __post_init__(self):
+    #     self.phone = (self.phone.replace('+', '')
+    #                         .replace('-', '')
+    #                         .replace('(', '')
+    #                         .replace(')', '')
+    #     )
+    #     print ("sanitize inputs")
+
+
+@dataclass
+class NewRecord:
+    doctor_id: int = Form(...)
+    patient_id: int = Form(...)
+    description: str = Form(...)
+    treatment: str = Form(...)

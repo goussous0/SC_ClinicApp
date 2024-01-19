@@ -1,10 +1,11 @@
 
 {% extends 'header.html' %}
-{% block title %} Doctors {% endblock %}
+{% block title %} Patients {% endblock %}
 {% block content %}
 
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#patient_modal" >Add patient</button>
+{% if user.user_type.value == 'REGISTRAR' %}
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#patient_modal" >Add patient</button>
+{% endif %}
 
 <div class="modal fade" id="patient_modal" tabindex="-1" role="dialog" aria-labelledby="patient_modal_label" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -13,35 +14,35 @@
         <h5 class="modal-title" id="patient_modalLabel">New patient</h5>
       </div>
       <div class="modal-body">
-        <form method="POST" action="{{url_for('add_doctor')}}">
+        <form method="POST" action="{{url_for('add_patient')}}">
           <!-- Patient name -->
           <div class="form-group">
             <label for="patient_name" class="col-form-label">Name:</label>
-            <input type="text" class="form-control" id="patient_name">
+            <input type="text" class="form-control" id="patient_name" name="name">
           </div>
 
           <!-- Patient username -->
           <div class="form-group">
             <label for="patient_username" class="col-form-label">Username:</label>
-            <input type="text" class="form-control" id="patient_username">
+            <input type="text" class="form-control" id="patient_username" name="username">
           </div>
 
           <!-- Patient password -->
           <div class="form-group">
             <label for="patient_password" class="col-form-label">Password:</label>
-            <input type="password" class="form-control" id="patient_password">
+            <input type="password" class="form-control" id="patient_password" name="password">
           </div>
 
           <!-- Patient age-->
           <div class="form-group">
             <label for="patient_age" class="col-form-label">Age:</label>
-            <input type="number" min="18" max="150" class="form-control" id="patient_age">
+            <input type="number" min="18" max="150" class="form-control" id="patient_age" name="age">
           </div>
 
           <!-- Patient phone number -->
           <div class="form-group">
             <label for="patient_phone" class="col-form-label">Phone:</label>
-            <input type="text" class="form-control" id="patient_phone">
+            <input type="text" class="form-control" id="patient_phone" name="phone">
           </div>
 
           <!-- Patient gender -->
@@ -64,10 +65,61 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="patient_record_modal" tabindex="-1" role="dialog" aria-labelledby="patient_record_modal_label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="patient_modalLabel">New record</h5>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{{url_for('add_record')}}">
+
+          <!-- Patient ID -->
+          <div class="form-group">
+            <input type="text" class="form-control" id="pid" name="patient_id" hidden>
+          </div>
+
+          <!-- Doctor ID -->
+          <div class="form-group">
+            <input type="text" class="form-control" id="did" name="doctor_id" value="{{user.id}}" hidden>
+          </div>
+
+          <!-- Patient description -->
+          <div class="form-group">
+            <label for="patient_description" class="col-form-label">Description:</label>
+            <input type="text" class="form-control" id="patient_description" name="description">
+          </div>
+
+          <!-- Patient treatment -->
+          <div class="form-group">
+            <label for="patient_treatment" class="col-form-label">Treatment:</label>
+            <input type="text" class="form-control" id="patient_treatment" name="treatment">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
     $('#patient_modal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget) 
       var modal = $(this)
+    })
+    $('#patient_record_modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) 
+      var patient_id = button.data('pid')
+      console.log(patient_id);
+      var modal = $(this);
+      modal.find('#pid').val(patient_id)
     })
 </script>
 
@@ -87,7 +139,13 @@
     {% for patient in patients %}
         <tr>
             <th scope="row">{{patient.id}}</th>
-            <td>{{patient.name}}</td>
+            <td>
+              {% if user.user_type.value == 'DOCTOR' %}
+              <a data-toggle="modal" data-target="#patient_record_modal" data-pid="{{patient.id}}">
+                {{patient.name}}
+              </a>
+              {% endif %}
+            </td>
             <td>{{patient.age|default("",True)}}</td>
             <td>{{patient.gender.value}}</td>
             <td>{{patient.phone}}</td>

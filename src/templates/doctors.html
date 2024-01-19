@@ -3,8 +3,9 @@
 {% block title %} Doctors {% endblock %}
 {% block content %}
 
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#doctor_modal" >Add doctor</button>
+{% if user.user_type.value == 'REGISTRAR' %}
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#doctor_modal" >Add doctor</button>
+{% endif %}
 
 <div class="modal fade" id="doctor_modal" tabindex="-1" role="dialog" aria-labelledby="doctor_modal_label" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -17,37 +18,37 @@
           <!-- Doctor name -->
           <div class="form-group">
             <label for="doctor_name" class="col-form-label">Name:</label>
-            <input type="text" class="form-control" id="doctor_name">
+            <input type="text" class="form-control" id="doctor_name" name="name">
           </div>
 
           <!-- Doctor username -->
           <div class="form-group">
             <label for="doctor_username" class="col-form-label">Username:</label>
-            <input type="text" class="form-control" id="doctor_username">
+            <input type="text" class="form-control" id="doctor_username" name="username">
           </div>
 
           <!-- Doctor password -->
           <div class="form-group">
             <label for="doctor_password" class="col-form-label">Password:</label>
-            <input type="password" class="form-control" id="doctor_password">
+            <input type="password" class="form-control" id="doctor_password" name="password">
           </div>
 
           <!-- Doctor age-->
           <div class="form-group">
             <label for="doctor_age" class="col-form-label">Age:</label>
-            <input type="number" min="18" max="150" class="form-control" id="doctor_age">
+            <input type="number" min="18" max="150" class="form-control" id="doctor_age" name="age">
           </div>
 
           <!-- Doctor phone number -->
           <div class="form-group">
             <label for="doctor_phone" class="col-form-label">Phone:</label>
-            <input type="text" class="form-control" id="doctor_phone">
+            <input type="text" class="form-control" id="doctor_phone" name="phone">
           </div>
 
           <!-- Doctor gender -->
           <div class="form-group">
             <label for="doctor_gender" class="col-form-label">Gender:</label>
-            <select name="gender" id="doctor_gender">
+            <select name="gender" id="doctor_gender" name="gender">
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
             </select>
