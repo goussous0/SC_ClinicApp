@@ -1,3 +1,4 @@
+from os import environ
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
@@ -24,10 +25,10 @@ class App(FastAPI):
         User.metadata.create_all(bind=engine)
         Record.metadata.create_all(bind=engine)
 
-        # add dummy data 
+        # add dummy data
         db = next(get_db())
         try:
-            admin = User(username="admin", passhash=pass_hash("123"), user_type=UserType.REGISTRAR, name="sysadmin") 
+            admin = User(username=environ['ADMIN_USERNAME'], passhash=pass_hash(environ['ADMIN_PASSWORD']), user_type=UserType.REGISTRAR, name="sysadmin") 
 
             doctor = User(username="anna", name="Anna", gender=Gender.FEMALE, phone="+940234112", passhash=pass_hash("123"), user_type=UserType.DOCTOR)
             patient = User(username="sara", name="Sara", gender=Gender.FEMALE, phone="+123423423", passhash=pass_hash("123"), user_type=UserType.PATIENT)
