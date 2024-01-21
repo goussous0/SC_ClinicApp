@@ -10,3 +10,4 @@ python-jose
 bcrypt==4.0.1
 passlib
 psycopg2-binary
+pytest
