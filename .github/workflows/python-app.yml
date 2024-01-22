@@ -1,0 +1,17 @@
+name: ClinicPro tests
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - run: pip install -r requirements.txt
+
+    - name: Run Test Cases
+      working-directory: ./src
+      run: pytest tests
