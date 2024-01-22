@@ -2,6 +2,8 @@ from os import environ
 from pytest import fixture
 
 environ["DB_URI"] = "sqlite:///test_records.db"
+environ["ADMIN_USERNAME"] = "admin"
+environ["ADMIN_PASSWORD"] = "123"
 
 @fixture
 def test_db_session():
