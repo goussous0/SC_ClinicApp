@@ -163,4 +163,4 @@ lib64
 pyvenv.cfg
 bin/
 include
-**/records.db
+**/*.db
