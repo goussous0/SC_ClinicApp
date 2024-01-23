@@ -49,7 +49,7 @@ def test_add_user(age, name, phone, gender, password, username, user_type, msg_t
 @mark.parametrize("patient_id, doctor_id, description, treatment, msg_type, msg_value",
     [
         (3, 2, "headache, high temperature", "aspirin", "success", r"record \d added"),
-        (3, 2, "stomach ache", "Pepto-Bismol", "error", "Failed to add record")
+        (3, 2, "stomach ache", "Pepto-Bismol", "error", r"Failed to add record")
     ]
 )
 def test_add_record(patient_id, doctor_id, description, treatment, msg_type, msg_value, admin_user):

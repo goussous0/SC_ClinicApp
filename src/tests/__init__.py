@@ -1,13 +1,13 @@
 from os import environ
 from pytest import fixture
 
+# sqlite for testing only 
 environ["DB_URI"] = "sqlite:///test_records.db"
 environ["ADMIN_USERNAME"] = "admin"
 environ["ADMIN_PASSWORD"] = "123"
 
 @fixture
 def test_db_session():
-    # Use an SQLite in-memory database for testing
     engine = create_engine(environ["DB_URI"])
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = TestingSessionLocal()

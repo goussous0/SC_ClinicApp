@@ -1,3 +1,4 @@
+from os import environ
 from sqlalchemy import union_all
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -8,6 +9,7 @@ from fastapi import (
     Request
 )
 from fastapi.responses import RedirectResponse
+from fastapi_limiter.depends import RateLimiter
 
 from db import get_db
 
@@ -25,7 +27,7 @@ from schema import (
 from auth import verify_hash, create_access_token, pwd_context, TokenAuth
 
 
-api = APIRouter(prefix="/api")
+api = APIRouter(prefix="/api", dependencies=[Depends(RateLimiter(times=5, seconds=5))])
 
 @api.post("/add_patient")
 async def add_patient(request: Request, patient: NewUser = Depends(), db:Session = Depends(get_db), auth = Depends(TokenAuth())):
@@ -84,7 +86,6 @@ async def add_record(request: Request, record: NewRecord = Depends(), db: Sessio
         logger.error(e)
         db.rollback()
         return {"error": "Failed to add record"}
-
 
 @api.post("/login")
 async def post_login(request: Request, login_data: LoginForm = Depends(), db: Session = Depends(get_db)):

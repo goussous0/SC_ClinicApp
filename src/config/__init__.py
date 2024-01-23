@@ -1,8 +1,10 @@
 from os import environ
+import redis.asyncio as redis
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from fastapi_limiter import FastAPILimiter
 from sqlalchemy import or_, and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, aliased
@@ -86,3 +88,8 @@ class App(FastAPI):
             response = RedirectResponse(request.url_for('login'), 302)
             response.delete_cookie('token')
             return response
+    
+        @self.on_event("startup")
+        async def startup():
+            redis_connection = redis.from_url(environ["REDIS_URI"], encoding="utf-8", decode_responses=True)
+            await FastAPILimiter.init(redis_connection)
