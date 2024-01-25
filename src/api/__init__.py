@@ -9,7 +9,6 @@ from fastapi import (
     Request
 )
 from fastapi.responses import RedirectResponse
-from fastapi_limiter.depends import RateLimiter
 
 from db import get_db
 
@@ -26,8 +25,7 @@ from schema import (
 
 from auth import verify_hash, create_access_token, pwd_context, TokenAuth
 
-
-api = APIRouter(prefix="/api", dependencies=[Depends(RateLimiter(times=5, seconds=5))])
+api = APIRouter(prefix="/api")
 
 @api.post("/add_patient")
 async def add_patient(request: Request, patient: NewUser = Depends(), db:Session = Depends(get_db), auth = Depends(TokenAuth())):

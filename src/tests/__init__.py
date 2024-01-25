@@ -1,4 +1,5 @@
 from os import environ
+from time import sleep
 from pytest import fixture
 
 # sqlite for testing only 
@@ -13,6 +14,10 @@ def test_db_session():
     db = TestingSessionLocal()
     yield db
     db.close()
+
+@fixture
+def delay():
+    sleep(10)
 
 @fixture
 def admin_user():

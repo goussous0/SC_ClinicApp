@@ -1,15 +1,15 @@
 from os import environ
 from pytest import mark
 from re import match, compile
-from tests import client, admin_user
+from tests import client, admin_user, delay
 
-@mark.parametrize("username,password, token, response", 
+@mark.parametrize("username,password, token, response",  
     [
         (environ["ADMIN_USERNAME"], environ["ADMIN_PASSWORD"], True, "Logout"),
         ("hello", "world", False, "Login")
     ]
 )
-def test_login(username, password, token, response):
+def test_login(username, password, token, response, delay):
     payload = {
         "username": username,
         "password": password,
@@ -31,7 +31,7 @@ def test_login(username, password, token, response):
         (32, "Lera", "+945-5-8092348", "FEMALE", "l3t_m3_1n", "lera", "patient", "error", r"Failed to add patient"),    
     ]
 )
-def test_add_user(age, name, phone, gender, password, username, user_type, msg_type, msg_value, admin_user):
+def test_add_user(age, name, phone, gender, password, username, user_type, msg_type, msg_value, admin_user, delay):
     payload = {
         "age": age,
         "name": name,
@@ -52,7 +52,7 @@ def test_add_user(age, name, phone, gender, password, username, user_type, msg_t
         (3, 2, "stomach ache", "Pepto-Bismol", "error", r"Failed to add record")
     ]
 )
-def test_add_record(patient_id, doctor_id, description, treatment, msg_type, msg_value, admin_user):
+def test_add_record(patient_id, doctor_id, description, treatment, msg_type, msg_value, admin_user, delay):
     payload = {
         "patient_id": patient_id,
         "doctor_id": doctor_id,

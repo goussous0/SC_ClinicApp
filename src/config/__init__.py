@@ -16,13 +16,17 @@ from models.record import Record
 from schema import UserType, Gender
 from auth import TokenAuth
 from db import engine
+from fastapi_throttling import ThrottlingMiddleware
 
 class App(FastAPI):
     def __init__(self):
         super().__init__()
         self.include_router(api)
         self.templates = Jinja2Templates(directory="templates")
-        
+
+        self.add_middleware(ThrottlingMiddleware,
+                        limit=10,
+                        window=60)
 
         User.metadata.create_all(bind=engine)
         Record.metadata.create_all(bind=engine)
@@ -88,8 +92,4 @@ class App(FastAPI):
             response = RedirectResponse(request.url_for('login'), 302)
             response.delete_cookie('token')
             return response
-    
-        @self.on_event("startup")
-        async def startup():
-            redis_connection = redis.from_url(environ["REDIS_URI"], encoding="utf-8", decode_responses=True)
-            await FastAPILimiter.init(redis_connection)
+            
