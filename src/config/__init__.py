@@ -45,7 +45,10 @@ class App(FastAPI):
 
         self.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],
+            allow_origins=[
+                "http://localhost",
+                "http://10.0.0.22"
+            ],
             allow_methods=["GET", "POST", "PUT", "DELETE"],
             allow_headers=["*"],
         )
