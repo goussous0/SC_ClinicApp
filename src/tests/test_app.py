@@ -1,6 +1,7 @@
 from os import environ
 from pytest import mark
 from re import match, compile
+from db import get_db
 from tests import client, admin_user, delay
 
 @mark.parametrize("username,password, token, response",  
@@ -63,3 +64,9 @@ def test_add_record(patient_id, doctor_id, description, treatment, msg_type, msg
     
     assert resp.status_code == 200 
     assert bool(match(msg_value, resp.json()[msg_type])) 
+
+
+
+def test_database_connection():
+    db = next(get_db())
+    assert db.connection().closed == 0
