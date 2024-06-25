@@ -12,3 +12,4 @@ passlib
 psycopg2-binary
 pytest
 fastapi-throttling
+anyio>=4.4.0 # not directly required, pinned by Snyk to avoid a vulnerability
